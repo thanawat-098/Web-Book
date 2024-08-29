@@ -1,0 +1,347 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+    .an {
+        background-color: #fafafa;
+        color: #000;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+    }
+
+    .an1 {
+        display: flex;
+        justify-content: center;
+    }
+
+    .an2 {
+        background-color: blue;
+        color: #fafafa;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .an3 {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(33, 33, 33, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .an4 {
+        background-color: #fafafa;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        width: 70%;
+        height: 80%;
+    }
+
+    .an5 {
+        overflow: auto;
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem;
+    }
+
+    .an6 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: #000;
+    }
+
+    .an7 {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #000;
+    }
+
+    .an8 {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #9e9e9e;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+        outline: none;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+        .an8:focus {
+            box-shadow: 0 0 0 3px rgb(86, 119, 252);
+        }
+
+
+    .an9 {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+
+    .an10 {
+        background-color: #3f51b5;
+        color: #fafafa;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        margin-right: 0.5rem;
+    }
+
+    .an11 {
+        background-color: #e84e40;
+        color: #fafafa;
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        margin-right: 0.5rem;
+    }
+
+    .an12 {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .an13 {
+        background-color: #3f51b5;
+        color: #fafafa;
+    }
+
+    .an14 {
+        padding: 0.5rem 1rem;
+    }
+
+    .an15 {
+        width: 4rem;
+        height: 4rem;
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
+
+    .an16 {
+        background-color: #ffeb3b;
+        color: #000;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        margin: 0.25rem;
+    }
+
+    .an17 {
+        background-color: #e84e40;
+        color: #fafafa;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        margin: 0.25rem;
+    }
+</style>
+
+<!-- Add News Button -->
+<div class="an1">
+    <button id="addNewsBtn" class="an2">Add News</button>
+</div>
+
+<!-- Add News Modal -->
+<div id="newsModal" class="an3" style="display: none;">
+    <div class="an4">
+        <form id="newsForm" class="an5" enctype="multipart/form-data">
+            <h2 class="an6">Add News</h2>
+            <label for="headline" class="an7">Headline:</label>
+            <input type="text" id="headline" name="headline" class="an8" required />
+
+            <label for="details" class="an7">Details:</label>
+            <textarea id="details" name="details" class="an8" required></textarea>
+
+            <label for="primaryImage" class="an7">Primary Image:</label>
+            <input type="file" id="primaryImage" name="primaryImage" class="an8" />
+
+            <label for="additionalImages" class="an7">Additional Images (up to 8):</label>
+            <input type="file" id="additionalImages" name="additionalImages" class="an8" multiple />
+
+            <div class="an9">
+                <button type="button" class="an10" id="saveNewsBtn">Save</button>
+                <button type="button" class="an11" id="cancelNewsBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit News Modal -->
+<div id="editNewsModal" class="an3" style="display: none;">
+    <div class="an4">
+        <form id="editNewsForm" class="an5" enctype="multipart/form-data">
+            <h2 class="an6">Edit News</h2>
+
+            <!-- Hidden field to store the news ID -->
+            <input type="hidden" id="editNewsId" name="id" />
+
+            <label for="editHeadline" class="an7">Headline:</label>
+            <input type="text" id="editHeadline" name="headline" class="an8" required />
+
+            <label for="editDetails" class="an7">Details:</label>
+            <textarea id="editDetails" name="details" class="an8" required></textarea>
+
+            <label for="editPrimaryImage" class="an7">Primary Image:</label>
+            <input type="file" id="editPrimaryImage" name="primaryImage" class="an8" />
+
+            <label for="editAdditionalImages" class="an7">Additional Images (up to 8):</label>
+            <input type="file" id="editAdditionalImages" name="additionalImages" class="an8" multiple />
+
+            <div class="an9">
+                <button type="button" class="an10" id="saveEditNewsBtn">Save</button>
+                <button type="button" class="an11" id="cancelEditNewsBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- News Table -->
+<table class="an12">
+    <thead>
+        <tr class="an13">
+            <th class="an14">Headline</th>
+            <th class="an14">Details</th>
+            <th class="an14">Primary Image</th>
+            <th class="an14">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="newsTableBody">
+        <!-- News items will be dynamically inserted here -->
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('addNewsBtn').addEventListener('click', function () {
+        document.getElementById('newsModal').style.display = 'flex';
+    });
+
+    document.getElementById('cancelNewsBtn').addEventListener('click', function () {
+        document.getElementById('newsModal').style.display = 'none';
+    });
+
+    document.getElementById('saveNewsBtn').addEventListener('click', async function () {
+        const form = document.getElementById('newsForm');
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/api/AddNews', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('News added successfully!');
+                document.getElementById('newsModal').style.display = 'none';
+                loadNewsItems(); // Reload news items
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('Error adding news.');
+        }
+    });
+
+    function openEditNews(id) {
+        // Fetch the news item by ID and populate the edit form
+        fetch(`/api/AddNews/${id}`)
+            .then(response => response.json())
+            .then(newsItem => {
+                document.getElementById('editNewsId').value = newsItem.id;
+                document.getElementById('editHeadline').value = newsItem.headline;
+                document.getElementById('editDetails').value = newsItem.details;
+
+                // Populate other fields if needed
+
+                document.getElementById('editNewsModal').style.display = 'flex';
+            })
+            .catch(error => alert('Error fetching news item.'));
+    }
+
+    document.getElementById('cancelEditNewsBtn').addEventListener('click', function () {
+        document.getElementById('editNewsModal').style.display = 'none';
+    });
+
+    document.getElementById('saveEditNewsBtn').addEventListener('click', async function () {
+        const form = document.getElementById('editNewsForm');
+        const formData = new FormData(form);
+        const newsId = formData.get('id');
+
+        try {
+            const response = await fetch(`/api/AddNews/${newsId}`, {
+                method: 'PUT',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                alert('News updated successfully!');
+                document.getElementById('editNewsModal').style.display = 'none';
+                loadNewsItems(); // Reload news items
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('Error updating news.');
+        }
+    });
+
+
+    async function deleteNews(id) {
+        if (confirm('Are you sure you want to delete this news item?')) {
+            try {
+                const response = await fetch(`/api/AddNews/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('News deleted successfully!');
+                    loadNewsItems(); // Reload news items
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                alert('Error deleting news.');
+            }
+        }
+    }
+
+    async function loadNewsItems() {
+        try {
+            const response = await fetch('/api/AddNews');
+            const newsItems = await response.json();
+            const tableBody = document.getElementById('newsTableBody');
+
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            newsItems.forEach(newsItem => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="an14">${newsItem.headline}</td>
+                    <td class="an14">${newsItem.details}</td>
+                    <td class="an14"><img src="/${newsItem.primaryImage}" alt="news-image" class="an15" /></td>
+                    <td class="an14">
+                        <button class="an16" onclick="openEditNews(${newsItem.id})">Edit</button>
+                        <button class="an17" onclick="deleteNews(${newsItem.id})">Delete</button>
+                    </td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        } catch (error) {
+            alert('Error loading news items.');
+        }
+    }
+
+    // Load news items when the page loads
+    window.onload = loadNewsItems;
+</script>
+
+
+
+
+

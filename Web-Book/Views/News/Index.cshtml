@@ -1,0 +1,257 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<style>
+    .ns {
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .ns1 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .ns2 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    /* Media queries for responsive design */
+
+    .ns3 {
+        background-color: #f5f5f5;
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .ns4 {
+        width: 100%;
+        height: 12rem;
+        object-fit: cover;
+    }
+
+    .ns5 {
+        padding: 1rem;
+        height: 7rem;
+    }
+
+    .ns6 {
+        font-weight: 500;
+    }
+
+    .ns7 {
+        color: #000;
+    }
+
+    .ns8 {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #f5f5f5;
+        overflow: auto;
+    }
+
+    .ns9 {
+        padding: 1rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ns10 {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 1.5rem;
+    }
+
+    .ns11 {
+        font-size: 1.125rem;
+        color: #000;
+        margin-bottom: 1.5rem;
+    }
+
+    .ns12 {
+        width: 100%;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .ns13 {
+        padding: 1.5rem;
+        color: #000;
+    }
+
+    .ns14 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .ns15 {
+        margin-bottom: 1rem;
+    }
+
+    .ns16 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .ns17 {
+        border-radius: 0.5rem;
+        width: 20rem;
+        height: 12rem;
+    }
+
+    .ns18 {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+    }
+
+    .ns19 {
+        background-color: #f5f5f5;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        height: 16.5rem;
+    }
+
+    .ns20 {
+        width: 100%;
+        height: 10rem;
+        object-fit: cover;
+        border-radius: 0.375rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ns21 {
+        font-weight: 600;
+    }
+
+</style>
+
+
+<div class="ns">
+    <h2 class="ns1">ข้อมูลข่าวสาร ทั้งหมด</h2>
+    <div class="ns2" id="newsContainer">
+        <!-- News items will be dynamically inserted here -->
+    </div>
+</div>
+
+<!-- Detailed News View (Initially Hidden) -->
+<div class="ns8" id="newsDetailView" style="display: none;">
+    <div class="ns9">
+        <h1 class="ns10" id="detailHeadline"></h1>
+        <img id="detailPrimaryImage" class="ns12" />
+        <div class="ns13">
+            <p class="ns15" id="detailDetails">
+     
+            </p>
+            <div class="ns16" id="additionalImagesContainer">
+                    <img class="ns17" />
+            </div>
+        </div>
+    </div>
+
+    <div class="ns9">
+        <h2 class="ns14">ข่าวสารเกี่ยวข้อง</h2>
+        <div class="ns18" id="relatedNewsContainer">
+            <!-- Related news items will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    async function loadNewsItems() {
+        try {
+            // Fetch all news items
+            const response = await fetch('/api/AddNews');
+            const newsItems = await response.json();
+            const newsContainer = document.getElementById('newsContainer');
+            const relatedNewsContainer = document.getElementById('relatedNewsContainer');
+
+            // Clear existing content
+            newsContainer.innerHTML = '';
+            relatedNewsContainer.innerHTML = '';
+
+            // Populate newsContainer and relatedNewsContainer
+            newsItems.forEach(newsItem => {
+                // Create news card for the main news list
+                const newsCard = document.createElement('div');
+                newsCard.className = 'ns3';
+
+                newsCard.innerHTML = `
+                            <img class="ns4" src="/${newsItem.primaryImage}" alt="${newsItem.headline}" />
+                            <div class="ns5">
+                                <h4 class="ns6">${newsItem.headline}</h4>
+                                <p class="ns7">${newsItem.details}</p>
+                            </div>
+                        `;
+
+                newsCard.addEventListener('click', function () {
+                    showNewsDetail(newsItem);
+                });
+
+                newsContainer.appendChild(newsCard);
+
+                // Create related news card
+                const relatedCard = document.createElement('div');
+                relatedCard.className = 'ns19';
+
+                relatedCard.innerHTML = `
+                            <img src="/${newsItem.primaryImage}" class="ns20" />
+                            <h3 class="ns21">${newsItem.headline}</h3>
+                        `;
+
+                relatedCard.addEventListener('click', function () {
+                    showNewsDetail(newsItem);
+                });
+
+                relatedNewsContainer.appendChild(relatedCard);
+            });
+        } catch (error) {
+            alert('Error loading news items.');
+        }
+    }
+
+    function showNewsDetail(newsItem) {
+        document.getElementById('detailHeadline').innerText = newsItem.headline;
+        document.getElementById('detailPrimaryImage').src = `/${newsItem.primaryImage}`;
+        document.getElementById('detailDetails').innerText = newsItem.details;
+
+        // Clear existing additional images
+        const additionalImagesContainer = document.getElementById('additionalImagesContainer');
+        additionalImagesContainer.innerHTML = '';
+
+        // Add additional images if available
+        if (newsItem.additionalImages && newsItem.additionalImages.length > 0) {
+            newsItem.additionalImages.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = `/${image}`;
+                imgElement.className = 'ns17';
+                additionalImagesContainer.appendChild(imgElement);
+            });
+        }
+
+        // Show the detail view
+        document.getElementById('newsDetailView').style.display = 'block';
+    }
+
+    window.onload = loadNewsItems;
+</script>
+
+
+
+
+
